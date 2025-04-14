@@ -30,20 +30,32 @@ const TaskProgress: React.FC = () => {
   }
 
   return (
-    <div className="mt-4 mb-6">
+    <div className="mt-4 mb-6 space-y-4">
       <div className="flex items-center justify-between mb-1">
         <span className="text-sm font-medium">Task Completion</span>
         <span className="text-sm font-medium">{completionPercentage}%</span>
       </div>
       
-      <Progress value={completionPercentage} className="h-2 mb-4" />
+      <Progress value={completionPercentage} className="h-2" />
       
-      <div className="h-40 mt-6">
+      <div className="flex justify-center gap-4 text-sm">
+        <div className="flex items-center">
+          <div className="h-3 w-3 bg-[#4ade80] rounded-full mr-1"></div>
+          <span>Completed ({completedCount})</span>
+        </div>
+        <div className="flex items-center">
+          <div className="h-3 w-3 bg-[#fb923c] rounded-full mr-1"></div>
+          <span>Pending ({totalCount - completedCount})</span>
+        </div>
+      </div>
+
+      <div className="h-40 flex justify-center items-center">
         <ChartContainer
           config={{
             completed: { color: "#4ade80" },
             pending: { color: "#fb923c" },
           }}
+          className="w-full max-w-xs"
         >
           <PieChart>
             <Pie
@@ -63,17 +75,6 @@ const TaskProgress: React.FC = () => {
             <Tooltip content={<ChartTooltipContent />} />
           </PieChart>
         </ChartContainer>
-      </div>
-      
-      <div className="flex justify-center gap-4 mt-2 text-sm">
-        <div className="flex items-center">
-          <div className="h-3 w-3 bg-[#4ade80] rounded-full mr-1"></div>
-          <span>Completed ({completedCount})</span>
-        </div>
-        <div className="flex items-center">
-          <div className="h-3 w-3 bg-[#fb923c] rounded-full mr-1"></div>
-          <span>Pending ({totalCount - completedCount})</span>
-        </div>
       </div>
     </div>
   );

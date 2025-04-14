@@ -2,6 +2,7 @@
 import React from "react";
 import { useTodo } from "@/contexts/TodoContext";
 import ThemeToggle from "@/components/ThemeToggle";
+import TaskProgress from "@/components/TaskProgress";
 
 const TodoHeader: React.FC = () => {
   const { todos } = useTodo();
@@ -17,6 +18,8 @@ const TodoHeader: React.FC = () => {
         <span>Total tasks: {todos.length}</span>
         <span>Completed: {completedCount}</span>
       </div>
+      
+      <TaskProgress />
     </div>
   );
 };

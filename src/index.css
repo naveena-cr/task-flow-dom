@@ -40,10 +40,10 @@
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 240 10% 3.9%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
+    --popover: 240 10% 3.9%;
     --popover-foreground: 210 40% 98%;
 
     --primary: 258 67% 75%;
@@ -79,4 +79,18 @@
 
 .completed-task {
   @apply line-through text-gray-500;
+}
+
+/* Add a date display component styling */
+.due-date {
+  @apply text-xs text-gray-500 dark:text-gray-400 mt-1;
+}
+
+/* Animation for date selector */
+.date-selector-appear {
+  @apply transition-all duration-200 opacity-0;
+}
+
+.date-selector-appear-active {
+  @apply opacity-100;
 }

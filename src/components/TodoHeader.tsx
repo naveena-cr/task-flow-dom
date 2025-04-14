@@ -1,6 +1,7 @@
 
 import React from "react";
 import { useTodo } from "@/contexts/TodoContext";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const TodoHeader: React.FC = () => {
   const { todos } = useTodo();
@@ -8,8 +9,11 @@ const TodoHeader: React.FC = () => {
   
   return (
     <div className="mb-6">
-      <h1 className="text-3xl font-bold mb-2 text-todo-secondary">Task Flow</h1>
-      <div className="flex justify-between text-sm text-muted-foreground">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold mb-2 text-todo-secondary dark:text-violet-300">Task Flow</h1>
+        <ThemeToggle />
+      </div>
+      <div className="flex justify-between text-sm text-muted-foreground dark:text-gray-400">
         <span>Total tasks: {todos.length}</span>
         <span>Completed: {completedCount}</span>
       </div>

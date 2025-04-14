@@ -64,6 +64,14 @@ export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setTodos(prevTodos => 
           prevTodos.map(todo => todo.id === id ? updatedTodo : todo)
         );
+        
+        // Only show toast for text updates, not for due date changes to avoid too many notifications
+        if (updates.text) {
+          toast({
+            title: "Task updated",
+            description: "Your task has been updated."
+          });
+        }
       }
     } catch (error) {
       console.error("Failed to update todo:", error);

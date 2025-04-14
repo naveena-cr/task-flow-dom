@@ -9,7 +9,12 @@ export const TodoService = {
     if (!todosString) return [];
     
     try {
-      return JSON.parse(todosString);
+      // Parse todos and convert date strings back to Date objects
+      const todos: Todo[] = JSON.parse(todosString);
+      return todos.map(todo => ({
+        ...todo,
+        dueDate: todo.dueDate ? new Date(todo.dueDate) : null
+      }));
     } catch (error) {
       console.error("Error parsing todos from localStorage:", error);
       return [];
@@ -29,7 +34,8 @@ export const TodoService = {
       id: crypto.randomUUID(),
       text,
       completed: false,
-      createdAt: Date.now()
+      createdAt: Date.now(),
+      dueDate: null
     };
 
     const todos = TodoService.getTodos();

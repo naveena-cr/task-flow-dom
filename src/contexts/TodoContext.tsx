@@ -10,6 +10,7 @@ interface TodoContextType {
   updateTodo: (id: string, updates: Partial<Todo>) => void;
   deleteTodo: (id: string) => void;
   toggleTodoCompleted: (id: string) => void;
+  reorderTodos: (sourceIndex: number, destinationIndex: number) => void;
   loading: boolean;
 }
 
@@ -127,6 +128,23 @@ export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // New function to reorder todos
+  const reorderTodos = (sourceIndex: number, destinationIndex: number) => {
+    try {
+      const reorderedTodos = TodoService.reorderTodos(sourceIndex, destinationIndex);
+      if (reorderedTodos) {
+        setTodos(reorderedTodos);
+      }
+    } catch (error) {
+      console.error("Failed to reorder todos:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to reorder your tasks."
+      });
+    }
+  };
+
   return (
     <TodoContext.Provider value={{
       todos,
@@ -134,6 +152,7 @@ export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({ children
       updateTodo,
       deleteTodo,
       toggleTodoCompleted,
+      reorderTodos,
       loading
     }}>
       {children}

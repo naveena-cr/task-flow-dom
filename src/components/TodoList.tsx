@@ -10,12 +10,15 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
+import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
+import { GripVertical } from "lucide-react";
 
 type SortOption = "newest" | "oldest" | "dueDate" | "alphabetical";
 
 const TodoList: React.FC = () => {
-  const { todos, loading } = useTodo();
+  const { todos, loading, reorderTodos } = useTodo();
   const [sortBy, setSortBy] = useState<SortOption>("newest");
+  const [isDragging, setIsDragging] = useState(false);
 
   if (loading) {
     return (
@@ -51,9 +54,38 @@ const TodoList: React.FC = () => {
     }
   });
 
+  const handleDragEnd = (result: DropResult) => {
+    setIsDragging(false);
+    
+    // Dropped outside the list
+    if (!result.destination) {
+      return;
+    }
+
+    // If using a sort option other than manual, don't allow reordering
+    if (sortBy !== "newest") {
+      return;
+    }
+
+    const sourceIndex = result.source.index;
+    const destinationIndex = result.destination.index;
+
+    // Only reorder if the position actually changed
+    if (sourceIndex !== destinationIndex) {
+      reorderTodos(sourceIndex, destinationIndex);
+    }
+  };
+
   return (
     <div>
-      <div className="mb-4 flex justify-end">
+      <div className="mb-4 flex justify-between items-center">
+        <div className="text-sm text-muted-foreground">
+          {sortBy !== "newest" ? (
+            <span>Sorting by <span className="font-semibold">{sortBy}</span></span>
+          ) : (
+            <span>Drag tasks to reorder</span>
+          )}
+        </div>
         <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Sort by" />
@@ -67,11 +99,50 @@ const TodoList: React.FC = () => {
         </Select>
       </div>
       <ScrollArea className="h-[350px] w-full pr-4">
-        <div>
-          {sortedTodos.map((todo) => (
-            <TodoItem key={todo.id} todo={todo} />
-          ))}
-        </div>
+        <DragDropContext 
+          onDragEnd={handleDragEnd}
+          onDragStart={() => setIsDragging(true)}
+        >
+          <Droppable droppableId="todo-list">
+            {(provided) => (
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                className={isDragging ? "bg-gray-50 dark:bg-gray-800/50 rounded-lg p-1" : ""}
+              >
+                {sortedTodos.map((todo, index) => (
+                  <Draggable 
+                    key={todo.id} 
+                    draggableId={todo.id} 
+                    index={index}
+                    isDragDisabled={sortBy !== "newest"}
+                  >
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        className={`mb-2 ${snapshot.isDragging ? "opacity-70" : ""}`}
+                      >
+                        <div className="flex items-center">
+                          <div
+                            {...provided.dragHandleProps}
+                            className={`mr-1 p-1 rounded cursor-grab ${sortBy === "newest" ? "visible" : "invisible"} text-gray-400 hover:text-gray-600 dark:hover:text-gray-300`}
+                          >
+                            <GripVertical size={16} />
+                          </div>
+                          <div className="flex-grow">
+                            <TodoItem todo={todo} />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       </ScrollArea>
     </div>
   );

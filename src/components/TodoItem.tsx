@@ -1,11 +1,10 @@
 
 import React, { useState } from "react";
 import { Todo } from "@/types/todo";
-import { Check, Trash2, Calendar, Pencil } from "lucide-react";
+import { Check, Trash2, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTodo } from "@/contexts/TodoContext";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
 import {
   Popover,
@@ -46,7 +45,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
   return (
     <div 
       className={cn(
-        "flex items-center justify-between p-4 rounded-md mb-2 transition-all duration-300",
+        "flex items-center justify-between p-4 rounded-md transition-all duration-300",
         todo.completed 
           ? "bg-todo-completed" 
           : "bg-white hover:bg-todo-accent dark:bg-gray-800 dark:hover:bg-gray-700"

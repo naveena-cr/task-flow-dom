@@ -79,5 +79,21 @@ export const TodoService = {
     TodoService.saveTodos(todos);
     
     return updatedTodo;
+  },
+
+  // New function to reorder todos
+  reorderTodos: (sourceIndex: number, destinationIndex: number): Todo[] => {
+    const todos = TodoService.getTodos();
+    
+    // Remove the todo from its current position
+    const [removed] = todos.splice(sourceIndex, 1);
+    
+    // Insert the todo at the new position
+    todos.splice(destinationIndex, 0, removed);
+    
+    // Save the reordered todos
+    TodoService.saveTodos(todos);
+    
+    return todos;
   }
 };
